@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const BlogPost = require('./schema'); 
 const bodyParser = require('body-parser');
 const { resolve } = require('path');
 
@@ -19,6 +18,27 @@ mongoose
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.error('Connection Error:', err));
 
+// Add the BlogPost schema definition
+const blogPostSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  author: {
+    type: String,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const BlogPost = mongoose.model('BlogPost', blogPostSchema);
 
 app.get('/', (req, res) => {
   res.sendFile(resolve(__dirname, 'pages/index.html'));
@@ -74,5 +94,5 @@ app.delete('/api/posts/:id', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(Server running at http://localhost:${port});
+  console.log(`Server running at http://localhost:${port}`);
 });
